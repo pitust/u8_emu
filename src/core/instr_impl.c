@@ -480,9 +480,12 @@ void instr_bit(struct u8_core *core, uint8_t flags, struct u8_oper *op0, struct 
 	uint64_t bit_idx = oper_read(core, op1);
 
 	// Update flags
-	bool bit = (val >> bit_idx) & 1;
+	bool bit = val & (1 << bit_idx);
 	core->regs.psw &= 0b10111111;
-	core->regs.psw |= (uint8_t)(~bit) << 6;
+	if (!bit)
+		core->regs.psw |= (1 << 6);
+	else
+		core->regs.psw &= ~(1 << 6);
 
 	switch (flags) {
 		case 1: val |= 1 << bit_idx; break;				// SB
