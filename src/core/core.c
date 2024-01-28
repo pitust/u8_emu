@@ -17,8 +17,10 @@ void u8_reset(struct u8_core *core) {
 
 /* Execute one instruction */
 void u8_step(struct u8_core *core) {
-	// Disable last SWI
+	// Disable last SWI and last write
 	core->last_swi = 0xff;
+	core->last_write = 0;
+	core->last_write_size = 0;
 	
 	// Fetch the next instruction
 	uint16_t instr_word = u8_fetch(core);
@@ -27,7 +29,7 @@ void u8_step(struct u8_core *core) {
 	struct u8_instr *instr = u8_decode(instr_word);
 
 	if (instr == NULL) {
-		printf("ERROR: Invalid instruction %04X @ %X:%04XH\n", instr_word, core->regs.csr, core->regs.pc);
+		printf("ERROR: Invalid instruction %04X @ %X:%04XH\n", instr_word, core->regs.csr, core->regs.pc - 2);
 		return;
 	}
 

@@ -7,6 +7,10 @@
 uint64_t access_mem(struct u8_core *core, uint8_t seg, uint16_t offset, uint8_t size, enum u8_mem_type type, bool rw, uint64_t val) {
 	// Find region
 	uint32_t addr = ((uint32_t)seg << 16) | offset;
+	
+	core->last_write = addr;
+	core->last_write_size = size;
+	
 	for (int i = 0; i < core->mem.num_regions; i++) {
 		// Is the address in the current region?
 		uint32_t addr_l = core->mem.regions[i].addr_l;

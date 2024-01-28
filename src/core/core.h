@@ -11,6 +11,8 @@ struct u8_core {
 	uint8_t cur_dsr;
 	struct u8_mem mem;
 	uint8_t last_swi;
+	uint32_t last_write;
+	uint8_t last_write_size;
 };
 
 void u8_reset(struct u8_core *core);
